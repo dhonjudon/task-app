@@ -1,0 +1,120 @@
+body {
+  margin: 0;
+  font-family: "Segoe UI", sans-serif;
+  background: #f5f5f5;
+}
+
+.dashboard {
+  display: flex;
+  height: 100vh;
+}
+
+.sidebar {
+  width: 300px;
+  background: #719091;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar h2 {
+  margin: 0 0 20px;
+  font-size: 20px;
+}
+
+.tasks {
+  background: #fff;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+.tasks h3 {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.tasks .all {
+  float: right;
+  color: #719091;
+  cursor: pointer;
+}
+
+.tasks ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.tasks li {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.tasks li span {
+  font-size: 12px;
+  color: gray;
+}
+
+.tasks li.disabled {
+  opacity: 0.5;
+}
+
+.calendar {
+  background: #f1e6f4;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.calendar h4 {
+  margin: 0 0 10px;
+}
+
+.calendar input {
+  width: 100%;
+  padding: 6px;
+  border: none;
+  border-radius: 4px;
+}
+
+.main {
+  flex: 1;
+  background: #fff;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.task-entry {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.task-entry input {
+  flex: 1;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.task-entry button {
+  padding: 10px 15px;
+  font-size: 18px;
+  border: none;
+  background: #719091;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.task-display {
+  background: #e1e1e1;
+  flex: 1;
+  border-radius: 8px;
+  padding: 20px;
+}
