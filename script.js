@@ -1,21 +1,32 @@
-// for (let i = 1; i <= 5; i++) {
-//   console.log(String(i).repeat(i));
-// }
+const taskInput = document.getElementById("task");
+const addTaskButton = document.getElementById("add-task");
+const taskDisplay = document.querySelector(".task-display");
 
-// const button = document.getElementById("test");
+addTaskButton.addEventListener("click", () => {
+  const taskText = taskInput.value.trim();
 
-// button.addEventListener("click", function () {
-//   alert("meow meow nigga 🥵");
-// });
+  if (taskText !== "") {
+    const taskItem = document.createElement("div");
+    taskItem.className = "task-item";
 
-async function fetchData() {
-  try {
-    let response = await fetch("https://jsonplaceholder.typicode.com/posts");
-    let data = await response.json();
-    console.log(data);
-    console.log("Data fetched succesfully");
-  } catch (error) {
-    console.log("Error", error);
+    // Create text node
+    const textSpan = document.createElement("span");
+    textSpan.textContent = taskText;
+
+    // Create delete button
+    const deleteBtn = document.createElement("button");
+    deleteBtn.textContent = "🗑️"; // trash can icon
+    deleteBtn.className = "delete-btn";
+
+    // Delete functionality
+    deleteBtn.addEventListener("click", () => {
+      taskDisplay.removeChild(taskItem);
+    });
+
+    taskItem.appendChild(textSpan);
+    taskItem.appendChild(deleteBtn);
+    taskDisplay.appendChild(taskItem);
+
+    taskInput.value = "";
   }
-}
-fetchData();
+});
