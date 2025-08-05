@@ -15,7 +15,7 @@ addTaskButton.addEventListener("click", () => {
 
     // Create delete button
     const deleteBtn = document.createElement("button");
-    deleteBtn.textContent = "🗑️"; // trash can icon
+    deleteBtn.innerHTML = '<i class="fas fa-trash"></i>'; // Font Awesome trash icon
     deleteBtn.className = "delete-btn";
 
     // Delete functionality
