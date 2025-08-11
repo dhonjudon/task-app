@@ -39,19 +39,56 @@ body {
 
 .tasks ul {
   list-style: none;
+  margin-bottom: 15px;
 }
 
 .tasks li {
   padding: 10px 0;
   border-bottom: 1px solid #eee;
-  font-size: 15px;
+  font-size: 14px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  color: #444;
+  gap: 10px;
+  color: #666;
+}
+
+.tasks li input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  margin-right: 8px;
+}
+
+.tasks li .task-title {
+  flex: 1;
+  text-decoration: line-through;
+  color: #6c757d;
+  transition: all 0.3s ease;
+}
+
+/* Remove the disabled style since checkboxes are now interactive */
+.tasks li input[type="checkbox"]:disabled {
+  display: none;
+}
+
+/* Add styles for unchecked state */
+.tasks li input[type="checkbox"]:not(:checked) + .task-title {
+  text-decoration: none;
+  color: #333;
+}
+
+.tasks li .task-status {
+  font-size: 12px;
+  color: #28a745;
+}
+
+.tasks li input[type="checkbox"]:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .tasks li span {
+  margin-left: auto;
   font-size: 12px;
   color: #999;
 }
@@ -119,28 +156,68 @@ body {
 
 .task-item {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  background-color: #f0f4f8;
-  padding: 12px 15px;
+  gap: 10px;
+  padding: 12px;
+  background: #fff;
   border-radius: 6px;
-  font-size: 16px;
-  color: #333;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  margin-bottom: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-.task-item span {
-  flex: 1;
+.task-item.completed {
+  background-color: #f8f9fa;
+  opacity: 0.8;
 }
 
+.task-item.completed span {
+  text-decoration: line-through;
+  color: #6c757d;
+}
+
+.task-checkbox {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.task-actions {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.edit-btn,
 .delete-btn {
   background: none;
   border: none;
   cursor: pointer;
-  color: #ff4444;
   padding: 5px;
+  opacity: 0.7;
+  transition: opacity 0.2s;
 }
 
+.edit-btn:hover,
 .delete-btn:hover {
-  color: #cc0000;
+  opacity: 1;
+}
+
+.edit-btn {
+  color: #2196f3;
+}
+
+.delete-btn {
+  color: #f44336;
+}
+
+/* Empty state styles */
+.empty-state {
+  text-align: center;
+  padding: 20px 0;
+  color: #999;
+  display: none;
+}
+
+.empty-state.visible {
+  display: block;
 }
