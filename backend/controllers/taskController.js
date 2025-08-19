@@ -5,10 +5,17 @@ const taskController = {
     try {
       const task = new Task({
         title: req.body.title,
+        description: req.body.description || "",
         completed: req.body.completed || false,
+        category: req.body.category || null,
+        dueDate: req.body.dueDate || null,
+        priority: req.body.priority || "medium",
       });
       const savedTask = await task.save();
-      res.status(201).json(savedTask);
+      const populatedTask = await Task.findById(savedTask._id).populate(
+        "category"
+      );
+      res.status(201).json(populatedTask);
     } catch (error) {
       res.status(400).json({ message: error.message });
     }
@@ -16,7 +23,7 @@ const taskController = {
 
   getAllTasks: async (req, res) => {
     try {
-      const tasks = await Task.find();
+      const tasks = await Task.find().populate("category");
       res.json(tasks);
     } catch (error) {
       res.status(500).json({ message: error.message });

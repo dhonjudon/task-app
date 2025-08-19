@@ -8,6 +8,8 @@
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+      integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+      crossorigin="anonymous"
     />
   </head>
   <body>
@@ -32,14 +34,125 @@
 
       <main class="main">
         <div class="task-entry">
-          <input id="task" type="text" placeholder="Add your task here" />
-          <button id="add-task">+</button>
+          <button id="add-task" class="add-task-btn">+ Add New Task</button>
         </div>
         <div class="task-display">
           <!-- Tasks will appear here -->
         </div>
       </main>
     </div>
+
+    <!-- Modal Overlay -->
+    <div id="modal-overlay" class="modal-overlay">
+      <div class="modal">
+        <div class="modal-header">
+          <h3 id="modal-title">Modal Title</h3>
+          <button class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p id="modal-message">Modal message goes here</p>
+          <input
+            type="text"
+            id="modal-input"
+            placeholder="Enter value..."
+            style="display: none"
+          />
+        </div>
+        <div class="modal-footer">
+          <button id="modal-cancel" class="btn btn-secondary">Cancel</button>
+          <button id="modal-confirm" class="btn btn-primary">Confirm</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Task Creation Modal -->
+    <div id="task-modal-overlay" class="modal-overlay">
+      <div class="modal task-modal">
+        <div class="modal-header">
+          <h3>Add New Task</h3>
+          <button class="modal-close" id="task-modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="task-title">Task Title *</label>
+            <input
+              type="text"
+              id="task-title"
+              placeholder="Enter task title..."
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="task-description">Description</label>
+            <textarea
+              id="task-description"
+              placeholder="Enter task description..."
+              rows="3"
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="task-category">Category</label>
+            <div class="category-input-group">
+              <select id="task-category">
+                <option value="">No Category</option>
+                <option value="create-new">+ Create New Category</option>
+              </select>
+              <div id="new-category-fields" style="display: none">
+                <input
+                  type="text"
+                  id="new-category-name"
+                  placeholder="Category name..."
+                  maxlength="30"
+                />
+                <input
+                  type="color"
+                  id="new-category-color"
+                  value="#007bff"
+                  title="Category color"
+                />
+                <button
+                  type="button"
+                  id="save-category-btn"
+                  class="btn btn-small"
+                >
+                  Save
+                </button>
+                <button
+                  type="button"
+                  id="cancel-category-btn"
+                  class="btn btn-small btn-secondary"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="task-due-date">Due Date</label>
+            <input type="date" id="task-due-date" />
+          </div>
+
+          <div class="form-group">
+            <label for="task-priority">Priority</label>
+            <select id="task-priority">
+              <option value="low">Low</option>
+              <option value="medium" selected>Medium</option>
+              <option value="high">High</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="task-modal-cancel" class="btn btn-secondary">
+            Cancel
+          </button>
+          <button id="task-modal-save" class="btn btn-primary">Add Task</button>
+        </div>
+      </div>
+    </div>
+
     <script src="javascript/script.js"></script>
   </body>
 </html>

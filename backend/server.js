@@ -3,6 +3,7 @@ const path = require("path");
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 const taskRoutes = require("./routes/taskRoutes");
+const categoryRoutes = require("./routes/categoryRoutes");
 
 // Load env vars - add this before using process.env
 dotenv.config();
@@ -40,6 +41,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/tasks", taskRoutes);
+app.use("/api/categories", categoryRoutes);
 
 // Error handler
 app.use((err, req, res, next) => {
