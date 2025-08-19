@@ -32,8 +32,26 @@ document.addEventListener("DOMContentLoaded", () => {
   const saveCategoryBtn = document.getElementById("save-category-btn");
   const cancelCategoryBtn = document.getElementById("cancel-category-btn");
 
-  // Store categories
+  // Task view modal elements
+  const taskViewModalOverlay = document.getElementById(
+    "task-view-modal-overlay"
+  );
+  const taskViewModalClose = document.getElementById("task-view-modal-close");
+  const taskViewModalCloseBtn = document.getElementById(
+    "task-view-modal-close-btn"
+  );
+  const taskViewModalEdit = document.getElementById("task-view-modal-edit");
+  const viewTaskTitle = document.getElementById("view-task-title");
+  const viewTaskDescription = document.getElementById("view-task-description");
+  const viewTaskCategory = document.getElementById("view-task-category");
+  const viewTaskDueDate = document.getElementById("view-task-due-date");
+  const viewTaskPriority = document.getElementById("view-task-priority");
+  const viewTaskStatus = document.getElementById("view-task-status");
+  const viewTaskCreated = document.getElementById("view-task-created");
+
+  // Store categories and current viewing task
   let categories = [];
+  let currentViewingTask = null;
 
   // Modal functions
   const showModal = (title, message, showInput = false, inputValue = "") => {
@@ -173,12 +191,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Show task creation modal
   const showTaskModal = () => {
+    // Reset form fields
     taskTitle.value = "";
     taskDescription.value = "";
     taskCategory.value = "";
     taskDueDate.value = "";
     taskPriority.value = "medium";
     newCategoryFields.style.display = "none";
+
+    // Reset modal for creating new task
+    document.querySelector("#task-modal-overlay .modal-header h3").textContent =
+      "Add New Task";
+    taskModalSave.textContent = "Add Task";
+    delete taskModalSave.dataset.editingId;
+
     taskModalOverlay.classList.add("active");
     taskTitle.focus();
   };
@@ -187,7 +213,79 @@ document.addEventListener("DOMContentLoaded", () => {
   const closeTaskModal = () => {
     taskModalOverlay.classList.remove("active");
     newCategoryFields.style.display = "none";
+
+    // Reset modal state
+    document.querySelector("#task-modal-overlay .modal-header h3").textContent =
+      "Add New Task";
+    taskModalSave.textContent = "Add Task";
+    delete taskModalSave.dataset.editingId;
   };
+
+  // Show task view modal
+  const showTaskViewModal = (task) => {
+    currentViewingTask = task;
+
+    // Populate task details
+    viewTaskTitle.textContent = task.title;
+
+    viewTaskDescription.textContent = task.description || "No description";
+    viewTaskDescription.className = task.description
+      ? "view-value"
+      : "view-value empty";
+
+    if (task.category) {
+      viewTaskCategory.innerHTML = `<span class="task-category" style="background-color: ${
+        task.category.color || "#007bff"
+      }">${task.category.name}</span>`;
+    } else {
+      viewTaskCategory.textContent = "No category";
+      viewTaskCategory.className = "view-value empty";
+    }
+
+    if (task.dueDate) {
+      const dueDate = new Date(task.dueDate);
+      const isOverdue = dueDate < new Date() && !task.completed;
+      viewTaskDueDate.innerHTML = `${dueDate.toLocaleDateString()} ${
+        isOverdue ? '<span style="color: #dc3545;">(Overdue)</span>' : ""
+      }`;
+    } else {
+      viewTaskDueDate.textContent = "No due date";
+      viewTaskDueDate.className = "view-value empty";
+    }
+
+    viewTaskPriority.innerHTML = `<span class="priority-badge priority-${
+      task.priority || "medium"
+    }">${(task.priority || "medium").toUpperCase()}</span>`;
+
+    viewTaskStatus.innerHTML = `<span class="status-badge ${
+      task.completed ? "completed" : "pending"
+    }">${task.completed ? "Completed" : "Pending"}</span>`;
+
+    const createdDate = new Date(task.date);
+    viewTaskCreated.textContent =
+      createdDate.toLocaleDateString() +
+      " at " +
+      createdDate.toLocaleTimeString();
+
+    taskViewModalOverlay.classList.add("active");
+  };
+
+  // Close task view modal
+  const closeTaskViewModal = () => {
+    taskViewModalOverlay.classList.remove("active");
+    currentViewingTask = null;
+  };
+
+  // Task view modal event listeners
+  taskViewModalClose.addEventListener("click", closeTaskViewModal);
+  taskViewModalCloseBtn.addEventListener("click", closeTaskViewModal);
+
+  taskViewModalEdit.addEventListener("click", () => {
+    if (currentViewingTask) {
+      closeTaskViewModal();
+      editTask(currentViewingTask._id);
+    }
+  });
 
   // Handle category selection change
   taskCategory.addEventListener("change", () => {
@@ -270,8 +368,12 @@ document.addEventListener("DOMContentLoaded", () => {
         priority: taskPriority.value,
       };
 
-      const response = await fetch("/api/tasks", {
-        method: "POST",
+      const isEditing = taskModalSave.dataset.editingId;
+      const url = isEditing ? `/api/tasks/${isEditing}` : "/api/tasks";
+      const method = isEditing ? "PUT" : "POST";
+
+      const response = await fetch(url, {
+        method: method,
         headers: {
           "Content-Type": "application/json",
         },
@@ -280,12 +382,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (response.ok) {
         const task = await response.json();
-        addTaskToDisplay(task);
+
+        if (isEditing) {
+          // Refresh the entire task list for updates
+          loadTasks();
+        } else {
+          // Add new task to display
+          addTaskToDisplay(task);
+          emptyState.classList.remove("visible");
+        }
+
         closeTaskModal();
-        emptyState.classList.remove("visible");
+
+        // Reset modal for next use
+        document.querySelector(
+          "#task-modal-overlay .modal-header h3"
+        ).textContent = "Add New Task";
+        taskModalSave.textContent = "Add Task";
+        delete taskModalSave.dataset.editingId;
       }
     } catch (error) {
-      console.error("Error adding task:", error);
+      console.error("Error saving task:", error);
     }
   });
 
@@ -324,10 +441,18 @@ document.addEventListener("DOMContentLoaded", () => {
       <input type="checkbox" class="task-checkbox" checked data-id="${task._id}" />
       <span class="task-title">${task.title}</span>
       <span class="task-status">Completed</span>
+      <div class="completed-task-actions">
+        <button class="view-btn small" data-id="${task._id}" title="View Task">
+          <i class="fas fa-eye"></i>
+        </button>
+      </div>
     `;
 
-    // Add event listener to checkbox to allow unchecking
+    // Add event listeners
     const checkbox = li.querySelector(".task-checkbox");
+    const viewBtn = li.querySelector(".view-btn");
+
+    // Checkbox event to allow unchecking
     checkbox.addEventListener("change", async () => {
       try {
         await updateTaskStatus(task._id, checkbox.checked);
@@ -337,6 +462,9 @@ document.addEventListener("DOMContentLoaded", () => {
         checkbox.checked = !checkbox.checked; // Revert on error
       }
     });
+
+    // View button event
+    viewBtn.addEventListener("click", () => showTaskViewModal(task));
 
     upcomingTasksList.appendChild(li);
   };
@@ -398,6 +526,9 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>
       </div>
       <div class="task-actions">
+        <button class="view-btn" data-id="${task._id}" title="View Task">
+          <i class="fas fa-eye"></i>
+        </button>
         <button class="edit-btn" data-id="${task._id}" title="Edit Task">
           <i class="fas fa-edit"></i>
         </button>
@@ -409,6 +540,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Add all event listeners
     const checkbox = taskElement.querySelector(".task-checkbox");
+    const viewBtn = taskElement.querySelector(".view-btn");
     const editBtn = taskElement.querySelector(".edit-btn");
     const deleteBtn = taskElement.querySelector(".delete-btn");
 
@@ -423,8 +555,11 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
+    // View button event
+    viewBtn.addEventListener("click", () => showTaskViewModal(task));
+
     // Edit button event
-    editBtn.addEventListener("click", () => editTask(task._id, task.title));
+    editBtn.addEventListener("click", () => editTask(task._id));
 
     // Delete button event
     deleteBtn.addEventListener("click", () => deleteTask(task._id));
@@ -473,27 +608,37 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   // Edit task
-  const editTask = async (id, currentTitle) => {
-    const newTitle = await customPrompt(
-      "Edit task:",
-      currentTitle,
-      "Edit Task"
-    );
-    if (!newTitle || newTitle === currentTitle) return;
-
+  const editTask = async (taskId) => {
     try {
-      const response = await fetch(`/api/tasks/${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ title: newTitle }),
-      });
-      if (response.ok) {
-        loadTasks(); // Refresh the task list
+      // First fetch the current task data
+      const response = await fetch(`/api/tasks/${taskId}`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch task");
       }
+      const task = await response.json();
+
+      // Populate the modal with current task data
+      taskTitle.value = task.title;
+      taskDescription.value = task.description || "";
+      taskCategory.value = task.category ? task.category._id : "";
+      taskDueDate.value = task.dueDate ? task.dueDate.split("T")[0] : "";
+      taskPriority.value = task.priority || "medium";
+
+      // Change modal title and button text for editing
+      document.querySelector(
+        "#task-modal-overlay .modal-header h3"
+      ).textContent = "Edit Task";
+      taskModalSave.textContent = "Update Task";
+
+      // Store the task ID for updating
+      taskModalSave.dataset.editingId = taskId;
+
+      // Show the modal
+      taskModalOverlay.classList.add("active");
+      taskTitle.focus();
     } catch (error) {
-      console.error("Error editing task:", error);
+      console.error("Error loading task for editing:", error);
+      alert("Failed to load task for editing");
     }
   };
 

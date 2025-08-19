@@ -571,6 +571,136 @@ body {
   color: #721c24;
 }
 
+/* Task View Modal Styles */
+.task-view-modal {
+  max-width: 600px;
+  width: 95%;
+}
+
+.task-view-content {
+  padding: 10px 0;
+}
+
+.view-field {
+  margin-bottom: 15px;
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+}
+
+.view-field label {
+  font-weight: 600;
+  color: #333;
+  min-width: 100px;
+  flex-shrink: 0;
+}
+
+.view-value {
+  flex: 1;
+  color: #555;
+  word-wrap: break-word;
+  line-height: 1.5;
+}
+
+.view-value.empty {
+  color: #999;
+  font-style: italic;
+}
+
+.view-value .task-category {
+  display: inline-block;
+  margin: 0;
+}
+
+.view-value .priority-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.view-value .status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 15px;
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.status-badge.completed {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.status-badge.pending {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+/* View button styles */
+.view-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  opacity: 1;
+  transition: all 0.2s;
+  border-radius: 4px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  color: #6c757d;
+  background-color: rgba(108, 117, 125, 0.1);
+}
+
+.view-btn:hover {
+  background-color: rgba(108, 117, 125, 0.2);
+  transform: scale(1.1);
+}
+
+.view-btn i {
+  font-size: 14px;
+  pointer-events: none;
+}
+
+/* Completed task styling */
+.tasks li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.completed-task-actions {
+  margin-left: auto;
+}
+
+.view-btn.small {
+  width: 24px;
+  height: 24px;
+  padding: 4px;
+  font-size: 12px;
+}
+
+.view-btn.small i {
+  font-size: 12px;
+}
+
+/* Task description styling */
+.task-description {
+  font-size: 14px;
+  color: #666;
+  margin-top: 4px;
+  line-height: 1.4;
+}
+
 /* Add Task Button */
 .add-task-btn {
   width: 100%;

@@ -153,6 +153,64 @@
       </div>
     </div>
 
+    <!-- Task View Modal -->
+    <div id="task-view-modal-overlay" class="modal-overlay">
+      <div class="modal task-view-modal">
+        <div class="modal-header">
+          <h3>Task Details</h3>
+          <button class="modal-close" id="task-view-modal-close">
+            &times;
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="task-view-content">
+            <div class="view-field">
+              <label>Title:</label>
+              <div id="view-task-title" class="view-value"></div>
+            </div>
+
+            <div class="view-field">
+              <label>Description:</label>
+              <div id="view-task-description" class="view-value"></div>
+            </div>
+
+            <div class="view-field">
+              <label>Category:</label>
+              <div id="view-task-category" class="view-value"></div>
+            </div>
+
+            <div class="view-field">
+              <label>Due Date:</label>
+              <div id="view-task-due-date" class="view-value"></div>
+            </div>
+
+            <div class="view-field">
+              <label>Priority:</label>
+              <div id="view-task-priority" class="view-value"></div>
+            </div>
+
+            <div class="view-field">
+              <label>Status:</label>
+              <div id="view-task-status" class="view-value"></div>
+            </div>
+
+            <div class="view-field">
+              <label>Created:</label>
+              <div id="view-task-created" class="view-value"></div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="task-view-modal-edit" class="btn btn-primary">
+            Edit Task
+          </button>
+          <button id="task-view-modal-close-btn" class="btn btn-secondary">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+
     <script src="javascript/script.js"></script>
   </body>
 </html>
